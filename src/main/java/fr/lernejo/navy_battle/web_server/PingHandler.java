@@ -6,7 +6,7 @@ import com.sun.net.httpserver.HttpHandler;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class PingHandler implements HttpHandler {
+public class PingHandler implements CallHandler {
 
     /**
      * Handle the given request and generate an appropriate response.
@@ -25,5 +25,10 @@ public class PingHandler implements HttpHandler {
         try (OutputStream os = exchange.getResponseBody()) {
             os.write(body.getBytes());
         }
+    }
+
+    @Override
+    public String getAssignedPath() {
+        return "/ping";
     }
 }

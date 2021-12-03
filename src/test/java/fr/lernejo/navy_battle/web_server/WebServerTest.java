@@ -10,13 +10,19 @@ import java.net.http.HttpResponse;
 
 class PingHandlerTest {
 
+    PingHandler myTestPingHandler = new PingHandler();
     NavyWebServer myTestNavyWebServer;
     NavyClient myTestHttpClient;
 
     @Test
+    void ping_assigned_path_should_be_ping() throws IOException, URISyntaxException, InterruptedException {
+        Assertions.assertEquals("/ping", myTestPingHandler.getAssignedPath());
+    }
+
+    @Test
     void ping_should_return_status_code_200_and_body_OK() throws IOException, URISyntaxException, InterruptedException {
         myTestNavyWebServer = new NavyWebServer();
-        myTestNavyWebServer.createContext( "/ping" );
+        myTestNavyWebServer.createContext( myTestPingHandler.getAssignedPath(), myTestPingHandler );
         myTestHttpClient = new NavyClient();
         HttpResponse<String> response = myTestHttpClient.ping( "localhost", NavyWebServer.DEFAULT_PORT );
         Assertions.assertEquals( 200, response.statusCode() );
