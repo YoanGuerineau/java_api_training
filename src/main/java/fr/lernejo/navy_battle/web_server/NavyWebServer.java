@@ -9,13 +9,16 @@ import java.util.concurrent.Executors;
 
 public class NavyWebServer {
 
+    public static final int DEFAULT_PORT = 9876;
     private final HttpServer myHttpServer;
-    private InetSocketAddress mySocket;
     private ExecutorCompletionService<HttpServer> myExecutorService;
 
+    public NavyWebServer() throws IOException {
+        this(DEFAULT_PORT);
+    }
+
     public NavyWebServer(int port) throws IOException {
-        this.mySocket = new InetSocketAddress(port);
-        this.myHttpServer = HttpServer.create(mySocket, 0);
+        this.myHttpServer = HttpServer.create( new InetSocketAddress( port ), 0);
         this.myHttpServer.setExecutor( Executors.newCachedThreadPool() );
         this.myExecutorService = new ExecutorCompletionService( this.myHttpServer.getExecutor() );
         this.myHttpServer.start();

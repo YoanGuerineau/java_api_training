@@ -7,7 +7,7 @@ import java.io.IOException;
 public class Launcher {
 
     public static void main(String[] args) throws IOException {
-        NavyWebServer myNavyWebServer = new NavyWebServer(9876);
+        NavyWebServer myNavyWebServer = new NavyWebServer(NavyWebServer.DEFAULT_PORT);
         myNavyWebServer.createContext("/ping");
     }
 
