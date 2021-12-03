@@ -24,7 +24,7 @@ public class NavyWebServer {
         this.myHttpServer = HttpServer.create( new InetSocketAddress( port ), 0);
         this.myHttpServer.setExecutor( Executors.newFixedThreadPool(1) );
         this.myHttpServer.start();
-        contexts.add(new PingHandler());
+        this.contexts.add(new PingHandler());
     }
 
     public void createContext(String path, CallHandler handler) {
@@ -37,6 +37,10 @@ public class NavyWebServer {
                 this.createContext(context.getAssignedPath(), context);
             }
         );
+    }
+
+    public void stop() {
+        this.myHttpServer.stop(0);
     }
 
 }

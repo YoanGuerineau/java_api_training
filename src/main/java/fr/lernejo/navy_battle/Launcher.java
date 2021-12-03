@@ -7,7 +7,7 @@ import java.io.IOException;
 public class Launcher {
 
     public static void main(String[] args) throws IOException {
-        NavyWebServer myNavyWebServer = null;
+        NavyWebServer myNavyWebServer;
         if ( args.length > 0 ) {
             int givenPort = Integer.parseInt(args[0]);
             myNavyWebServer = new NavyWebServer(givenPort);
