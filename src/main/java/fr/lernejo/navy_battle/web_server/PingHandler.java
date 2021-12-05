@@ -1,7 +1,6 @@
 package fr.lernejo.navy_battle.web_server;
 
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
 import java.io.OutputStream;

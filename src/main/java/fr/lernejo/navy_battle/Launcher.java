@@ -8,12 +8,12 @@ public class Launcher {
 
     public static void main(String[] args) throws IOException {
         NavyWebServer myNavyWebServer;
-        if ( args.length > 0 ) {
+        if (args.length > 0) {
             int givenPort = Integer.parseInt(args[0]);
             myNavyWebServer = new NavyWebServer(givenPort);
         } else {
-            System.out.println("You launched the server without providing a port.\nDefaulting port to: " + NavyWebServer.DEFAULT_PORT );
-            myNavyWebServer = new NavyWebServer();
+            System.out.println("You launched the server without providing a port.");
+            return;
         }
         myNavyWebServer.setupContexts();
     }

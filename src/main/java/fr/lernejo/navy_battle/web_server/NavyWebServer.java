@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.Executors;
 
 public class NavyWebServer {
@@ -15,10 +14,6 @@ public class NavyWebServer {
 
     private final HttpServer myHttpServer;
     private final List<CallHandler> contexts = new ArrayList<>();
-
-    public NavyWebServer() throws IOException {
-        this(DEFAULT_PORT);
-    }
 
     public NavyWebServer(int port) throws IOException {
         this.myHttpServer = HttpServer.create( new InetSocketAddress( port ), 0);
@@ -33,9 +28,7 @@ public class NavyWebServer {
 
     public void setupContexts() {
         contexts.forEach(
-            context -> {
-                this.createContext(context.getAssignedPath(), context);
-            }
+            context -> this.createContext(context.getAssignedPath(), context)
         );
     }
 
