@@ -21,14 +21,20 @@ class WebServerTest {
         myTestNavyWebServer = new NavyWebServer(testPort);
     }
     @BeforeEach
-    void setup_client() {
-        myTestHttpClient = new NavyClient( "http://localhost:" + testPort );
+    void setup_client() throws IOException {
+        myTestHttpClient = new NavyClient((testPort+1), "http://localhost:" + testPort );
     }
 
     @AfterEach
-    void close_web_server() {
+    void close_web_servers() {
         myTestNavyWebServer.stop();
-        testPort++;
+        myTestHttpClient.stopServer();
+    }
+
+    @AfterEach
+    void increment_test_port() {
+        // Leave a 10 port range for test purposes
+        testPort += 10;
     }
 
     @Test

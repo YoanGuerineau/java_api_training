@@ -35,7 +35,7 @@ public class GameStartHandler implements CallHandler {
         } else {
             byte[] buffIn = exchange.getRequestBody().readAllBytes();
             System.out.println(new String(buffIn, StandardCharsets.UTF_8));
-            body = new GameStartJSON( new URL("http://localhost:9876"), "May the best win!").getJSON();
+            body = new GameStartJSON( new URL("http://"+exchange.getRequestHeaders().getFirst("Host")), "May the best win!").getJSON();
             exchange.sendResponseHeaders(202, body.length());
         }
         try (OutputStream os = exchange.getResponseBody()) {

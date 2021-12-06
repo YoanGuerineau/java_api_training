@@ -1,6 +1,7 @@
 package fr.lernejo.navy_battle.client;
 
 import fr.lernejo.navy_battle.transactions.GameStartJSON;
+import fr.lernejo.navy_battle.web_server.NavyWebServer;
 
 import java.io.IOException;
 import java.net.*;
@@ -11,12 +12,17 @@ import java.time.Duration;
 
 public class NavyClient {
 
+    private final NavyWebServer myClientWebServer;
     private final HttpClient myHttpClient;
     private final URL targetURL;
+    private final int givenPort;
 
-    public NavyClient( String targetURL ) {
+    public NavyClient( int givenPort, String targetURL ) throws IOException {
+        this.givenPort = givenPort;
         URL foundURL = null;
         myHttpClient = HttpClient.newHttpClient();
+        myClientWebServer = new NavyWebServer(this.givenPort);
+
         try {
             foundURL = new URL(targetURL);
         } catch (MalformedURLException e) {
@@ -63,7 +69,11 @@ public class NavyClient {
     }
 
     public HttpResponse<String> gameStart() throws MalformedURLException {
-        GameStartJSON myMessage = new GameStartJSON( new URL("http://localhost:12345" ), "I will beat you!");
+        GameStartJSON myMessage = new GameStartJSON( new URL("http://localhost:" + this.givenPort ), "I will beat you!");
         return this.sendPOSTRequest( "/api/game/start", myMessage.getJSON() );
+    }
+
+    public void stopServer() {
+        this.myClientWebServer.stop();
     }
 }

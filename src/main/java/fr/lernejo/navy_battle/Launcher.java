@@ -9,15 +9,13 @@ import java.net.http.HttpResponse;
 public class Launcher {
 
     public static void main(String[] args) throws IOException {
-        NavyWebServer myNavyWebServer;
         if (args.length == 1) {
             int givenPort = Integer.parseInt(args[0]);
-            myNavyWebServer = new NavyWebServer(givenPort);
+            new NavyWebServer(givenPort);
         } else if ( args.length == 2) {
             int givenPort = Integer.parseInt(args[0]);
             String targetURL = args[1];
-            myNavyWebServer = new NavyWebServer(givenPort);
-            NavyClient myNavyClient = new NavyClient(targetURL);
+            NavyClient myNavyClient = new NavyClient(givenPort, targetURL);
             HttpResponse<String> myGameStartResponse = myNavyClient.gameStart();
             System.out.println(myGameStartResponse.statusCode());
             System.out.println(myGameStartResponse.body());
