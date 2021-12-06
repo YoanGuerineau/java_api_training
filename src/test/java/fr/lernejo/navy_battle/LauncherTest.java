@@ -10,7 +10,7 @@ import java.io.IOException;
 public class LauncherTest {
 
     // increment testPort between each step to avoid unwanted errors
-    private static int testPort = 10987;
+    private static int testPort = 10000;
 
     @AfterEach
     public void increment_testPort() {
@@ -36,6 +36,12 @@ public class LauncherTest {
     @Test
     public void main_should_not_throw_when_giving_correct_port() {
         Assertions.assertDoesNotThrow( () -> Launcher.main(new String[] { Integer.toString(testPort) }));
+    }
+
+    @Test
+    public void main_should_not_throw_when_giving_correct_port_and_address() {
+        Assertions.assertDoesNotThrow( () -> Launcher.main(new String[] { Integer.toString(testPort++) }));
+        Assertions.assertDoesNotThrow( () -> Launcher.main(new String[] { Integer.toString(testPort), "http://localhost:"+(testPort-1) }));
     }
 
     @Test

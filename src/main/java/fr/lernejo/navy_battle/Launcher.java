@@ -21,9 +21,6 @@ public class Launcher {
             HttpResponse<String> myGameStartResponse = myNavyClient.gameStart();
             System.out.println(myGameStartResponse.statusCode());
             System.out.println(myGameStartResponse.body());
-            myGameStartResponse = myNavyClient.ping();
-            System.out.println(myGameStartResponse.statusCode());
-            System.out.println(myGameStartResponse.body());
         } else {
             System.out.println("You launched the server without providing a port.");
         }
