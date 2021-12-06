@@ -14,19 +14,21 @@ class WebServerTest {
     PingHandler myTestPingHandler = new PingHandler();
     NavyWebServer myTestNavyWebServer;
     NavyClient myTestHttpClient;
+    int testPort = 11000;
 
     @BeforeEach
     void setup_web_server() throws IOException {
-        myTestNavyWebServer = new NavyWebServer(NavyWebServer.DEFAULT_PORT);
+        myTestNavyWebServer = new NavyWebServer(testPort);
     }
     @BeforeEach
     void setup_client() {
-        myTestHttpClient = new NavyClient();
+        myTestHttpClient = new NavyClient( "http://localhost:" + testPort );
     }
 
     @AfterEach
     void close_web_server() {
         myTestNavyWebServer.stop();
+        testPort++;
     }
 
     @Test
@@ -37,7 +39,7 @@ class WebServerTest {
     @Test
     void ping_should_return_status_code_200_and_body_OK() {
         myTestNavyWebServer.createContext( myTestPingHandler.getAssignedPath(), myTestPingHandler );
-        HttpResponse<String> response = myTestHttpClient.ping( "localhost", NavyWebServer.DEFAULT_PORT );
+        HttpResponse<String> response = myTestHttpClient.ping();
         Assertions.assertEquals( 200, response.statusCode() );
         Assertions.assertEquals( "OK", response.body() );
     }
@@ -45,7 +47,7 @@ class WebServerTest {
     @Test
     void setupContexts_should_setup_all_contexts() {
         myTestNavyWebServer.setupContexts();
-        HttpResponse<String> response = myTestHttpClient.ping( "localhost", NavyWebServer.DEFAULT_PORT );
+        HttpResponse<String> response = myTestHttpClient.ping();
         Assertions.assertEquals( 200, response.statusCode() );
         Assertions.assertEquals( "OK", response.body() );
         //Add content to check that all contexts are set
@@ -54,22 +56,21 @@ class WebServerTest {
     @Test
     void unknown_context_should_return_status_code_404() {
         myTestNavyWebServer.setupContexts();
-        HttpResponse<String> response = myTestHttpClient.sendGETRequest( "localhost", NavyWebServer.DEFAULT_PORT, "/unknown/path" );
+        HttpResponse<String> response = myTestHttpClient.sendGETRequest( "/unknown/path" );
         Assertions.assertEquals( 404, response.statusCode() );
-        //Add content to check that all contexts are set
     }
 
     @Test
     void sending_request_to_dead_server_should_not_throw() {
         myTestNavyWebServer.stop();
         Assertions.assertDoesNotThrow( () -> {
-            myTestHttpClient.sendGETRequest( "localhost", NavyWebServer.DEFAULT_PORT, "/ping" );
+            myTestHttpClient.sendGETRequest( "/ping" );
         });
     }
 
     @Test
     void sending_request_to_dead_server_should_return_null() {
         myTestNavyWebServer.stop();
-        Assertions.assertNull( myTestHttpClient.sendGETRequest( "localhost", NavyWebServer.DEFAULT_PORT, "/ping" ));
+        Assertions.assertNull( myTestHttpClient.sendGETRequest( "/ping" ));
     }
 }

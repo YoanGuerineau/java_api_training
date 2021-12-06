@@ -4,23 +4,29 @@ import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Arrays;
 
 public class PingHandler implements CallHandler {
 
-    /**
-     * Handle the given request and generate an appropriate response.
-     * See {@link HttpExchange} for a description of the steps
-     * involved in handling an exchange.
-     *
-     * @param exchange the exchange containing the request from the
-     *                 client and used to send the response
-     * @throws NullPointerException if exchange is {@code null}
-     * @throws IOException          if an I/O error occurs
-     */
+    @Override
+    public String[] allowedRequestMethods() {
+        return new String[]{"GET"};
+    }
+
+    @Override
+    public boolean isMethodAllowed(String method) {
+        return Arrays.stream(this.allowedRequestMethods()).toList().contains(method);
+    }
+
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        String body = "OK";
-        exchange.sendResponseHeaders(200, body.length());
+        String body = "Not found";
+        if ( ! this.isMethodAllowed(exchange.getRequestMethod()) ) {
+            exchange.sendResponseHeaders(404, body.length());
+        } else {
+            body = "OK";
+            exchange.sendResponseHeaders(200, body.length());
+        }
         try (OutputStream os = exchange.getResponseBody()) {
             os.write(body.getBytes());
         }

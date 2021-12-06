@@ -1,6 +1,7 @@
 package fr.lernejo.navy_battle.web_server;
 
 import com.sun.net.httpserver.HttpServer;
+import fr.lernejo.navy_battle.web_server.api.GameStartHandler;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -10,16 +11,16 @@ import java.util.concurrent.Executors;
 
 public class NavyWebServer {
 
-    public static final int DEFAULT_PORT = 9876;
-
     private final HttpServer myHttpServer;
     private final List<CallHandler> contexts = new ArrayList<>();
 
     public NavyWebServer(int port) throws IOException {
         this.myHttpServer = HttpServer.create( new InetSocketAddress( port ), 0);
         this.myHttpServer.setExecutor( Executors.newFixedThreadPool(1) );
-        this.myHttpServer.start();
         this.contexts.add(new PingHandler());
+        this.contexts.add(new GameStartHandler());
+        this.setupContexts();
+        this.myHttpServer.start();
     }
 
     public void createContext(String path, CallHandler handler) {
