@@ -1,5 +1,7 @@
 package fr.lernejo.navy_battle.client;
 
+import fr.lernejo.navy_battle.transactions.GameStartJSON;
+
 import java.io.IOException;
 import java.net.*;
 import java.net.http.HttpClient;
@@ -10,33 +12,58 @@ import java.time.Duration;
 public class NavyClient {
 
     private final HttpClient myHttpClient;
+    private final URL targetURL;
 
-    public NavyClient( ) {
-        myHttpClient = HttpClient.newBuilder()
-            .version( HttpClient.Version.HTTP_1_1 )
-            .followRedirects( HttpClient.Redirect.NORMAL )
-            .connectTimeout( Duration.ofSeconds( 5 ) )
-            .build();
+    public NavyClient( String targetURL ) {
+        URL foundURL = null;
+        myHttpClient = HttpClient.newHttpClient();
+        try {
+            foundURL = new URL(targetURL);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        this.targetURL = foundURL;
     }
 
-    public HttpResponse<String> sendGETRequest(String domainName, int port, String path) {
+    public HttpResponse<String> sendGETRequest(String path) {
         HttpResponse<String> response = null;
         try {
-            URL targetURL = new URL( "http", domainName, port, path );
             HttpRequest request = HttpRequest.newBuilder()
-                .uri( targetURL.toURI() )
+                .uri( URI.create(this.targetURL + path) )
                 .timeout( Duration.ofSeconds( 5 ) )
                 .GET()
                 .build();
             response = myHttpClient.send( request, HttpResponse.BodyHandlers.ofString() );
-        } catch ( IOException | InterruptedException | URISyntaxException e) {
-            System.err.println("Error when sending GET request to: " + "http://"+domainName+":"+port+"/ping");
+        } catch ( IOException | InterruptedException e) {
+            System.err.println("Error when sending GET request to: " + "http://"+this.targetURL.getHost()+":"+this.targetURL.getPort()+path);
             e.printStackTrace();
         }
         return response;
     }
 
-    public HttpResponse<String> ping( String domainName, int port ) {
-        return this.sendGETRequest( domainName, port, "/ping" );
+    public HttpResponse<String> sendPOSTRequest(String path, String toPost) {
+        HttpResponse<String> response = null;
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                .uri( URI.create(this.targetURL + path) )
+                .setHeader("Accept", "application/json")
+                .setHeader("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString( toPost ))
+                .build();
+           response = myHttpClient.send( request, HttpResponse.BodyHandlers.ofString() );
+        } catch ( IOException | InterruptedException e) {
+            System.err.println("Error when sending POST request to: " + "http://" + this.targetURL.getHost() + ":" + this.targetURL.getPort() + path);
+            e.printStackTrace();
+        }
+        return response;
+    }
+
+    public HttpResponse<String> ping() {
+        return this.sendGETRequest( "/ping" );
+    }
+
+    public HttpResponse<String> gameStart() throws MalformedURLException {
+        GameStartJSON myMessage = new GameStartJSON( new URL("http://localhost:12345" ), "I will beat you!");
+        return this.sendPOSTRequest( "/api/game/start", myMessage.getJSON() );
     }
 }
