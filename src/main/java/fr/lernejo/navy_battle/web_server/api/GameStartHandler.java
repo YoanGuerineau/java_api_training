@@ -1,7 +1,7 @@
 package fr.lernejo.navy_battle.web_server.api;
 
 import com.sun.net.httpserver.HttpExchange;
-import fr.lernejo.navy_battle.transactions.GameStartJSON;
+import fr.lernejo.navy_battle.transactions.JSONGameStart;
 import fr.lernejo.navy_battle.web_server.CallHandler;
 
 import java.io.IOException;
@@ -35,7 +35,7 @@ public class GameStartHandler implements CallHandler {
         } else {
             byte[] buffIn = exchange.getRequestBody().readAllBytes();
             System.out.println(new String(buffIn, StandardCharsets.UTF_8));
-            body = new GameStartJSON( new URL("http://"+exchange.getRequestHeaders().getFirst("Host")), "May the best win!").getJSON();
+            body = new JSONGameStart( new URL("http://"+exchange.getRequestHeaders().getFirst("Host")), "May the best win!").getJSONString();
             exchange.sendResponseHeaders(202, body.length());
         }
         try (OutputStream os = exchange.getResponseBody()) {
