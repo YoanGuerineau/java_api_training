@@ -16,9 +16,7 @@ public class Launcher {
             int givenPort = Integer.parseInt(args[0]);
             String targetURL = args[1];
             NavyClient myNavyClient = new NavyClient(givenPort, targetURL);
-            HttpResponse<String> myGameStartResponse = myNavyClient.gameStart();
-            System.out.println(myGameStartResponse.statusCode());
-            System.out.println(myGameStartResponse.body());
+            myNavyClient.play();
         } else {
             System.out.println("You launched the server without providing a port.");
         }

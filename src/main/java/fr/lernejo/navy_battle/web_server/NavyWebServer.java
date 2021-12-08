@@ -1,6 +1,7 @@
 package fr.lernejo.navy_battle.web_server;
 
 import com.sun.net.httpserver.HttpServer;
+import fr.lernejo.navy_battle.web_server.api.FireHandler;
 import fr.lernejo.navy_battle.web_server.api.GameStartHandler;
 
 import java.io.IOException;
@@ -19,6 +20,7 @@ public class NavyWebServer {
         this.myHttpServer.setExecutor( Executors.newFixedThreadPool(1) );
         this.contexts.add(new PingHandler());
         this.contexts.add(new GameStartHandler());
+        this.contexts.add(new FireHandler());
         this.setupContexts();
         this.myHttpServer.start();
     }

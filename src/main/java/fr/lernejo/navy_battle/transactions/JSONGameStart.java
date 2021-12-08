@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class JSONGameStart {
+public class JSONGameStart implements JSONNavyObject {
 
     public final String DEFAULT_PATTERN = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
 
@@ -52,7 +52,7 @@ public class JSONGameStart {
         JSONObject returnJSON = null;
         try (InputStream is = this.getClass().getClassLoader().getResourceAsStream("GameStart.json")) {
             JSONObject jsonSchema = new JSONObject( new JSONTokener(is));
-            Map<String,String> returnObject = new HashMap<>();
+            Map<String,Object> returnObject = new HashMap<>();
             returnObject.put("id",this.id);
             returnObject.put("url",String.valueOf(this.url));
             returnObject.put("message",this.message);
