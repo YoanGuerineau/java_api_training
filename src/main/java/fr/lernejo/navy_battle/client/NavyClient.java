@@ -1,5 +1,6 @@
 package fr.lernejo.navy_battle.client;
 
+import fr.lernejo.navy_battle.transactions.JSONFire;
 import fr.lernejo.navy_battle.transactions.JSONGameStart;
 import fr.lernejo.navy_battle.web_server.NavyWebServer;
 
@@ -74,15 +75,15 @@ public class NavyClient extends NavyWebServer {
     }
 
     public void play() throws MalformedURLException {
-        /*HttpResponse<String> myPingResponse = this.ping();
-        System.out.println(myPingResponse.statusCode());
-        System.out.println(myPingResponse.body());*/
         HttpResponse<String> myGameStartResponse = this.gameStart();
         System.out.println(myGameStartResponse.statusCode());
         System.out.println(myGameStartResponse.body());
-        HttpResponse<String> myGameFireResponse = this.fire("A1");
-        System.out.println(myGameFireResponse.statusCode());
-        System.out.println(myGameFireResponse.body());
+        HttpResponse<String> myGameFireResponse;
+        do {
+            myGameFireResponse = this.fire("A1");
+            System.out.println(myGameFireResponse.statusCode());
+            System.out.println(myGameFireResponse.body());
+        } while ((boolean) new JSONFire(myGameFireResponse.body()).getJSON().get("shipLeft"));
     }
 
 }

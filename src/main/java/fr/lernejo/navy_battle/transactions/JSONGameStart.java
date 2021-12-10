@@ -19,6 +19,20 @@ public class JSONGameStart implements JSONNavyObject {
     private final String url;
     private final String message;
 
+    public JSONGameStart(String toParse) {
+        JSONObject parsedJSON = new JSONObject(toParse);
+        try (InputStream is = this.getClass().getClassLoader().getResourceAsStream("GameStart.json")) {
+            JSONObject jsonSchema = new JSONObject( new JSONTokener(is));
+            SchemaLoader.load(jsonSchema).validate(parsedJSON);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            this.id = (String) parsedJSON.get("id");
+            this.url = (String) parsedJSON.get("url");
+            this.message = (String) parsedJSON.get("message");
+        }
+    }
+
     public JSONGameStart(URL url, String message ) {
         this.id = getIdFromPattern( DEFAULT_PATTERN );
         this.url = url.toString();

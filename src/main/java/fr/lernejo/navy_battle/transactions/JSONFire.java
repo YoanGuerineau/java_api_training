@@ -25,10 +25,24 @@ public class JSONFire implements JSONNavyObject {
     private final String consequence;
     private final boolean shipLeft;
 
+    public JSONFire(String toParse) {
+        JSONObject parsedJSON = new JSONObject(toParse);
+        try (InputStream is = this.getClass().getClassLoader().getResourceAsStream("Fire.json")) {
+            JSONObject jsonSchema = new JSONObject( new JSONTokener(is));
+            SchemaLoader.load(jsonSchema).validate(parsedJSON);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            this.consequence = (String) parsedJSON.get("consequence");
+            this.shipLeft = (boolean) parsedJSON.get("shipLeft");
+        }
+    }
+
     public JSONFire(String consequence, boolean shipLeft) {
         this.consequence = consequence;
         this.shipLeft = shipLeft;
     }
+
 
     @Override
     public JSONObject getJSON() {
