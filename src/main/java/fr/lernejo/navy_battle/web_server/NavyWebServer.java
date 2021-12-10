@@ -12,11 +12,13 @@ import java.util.concurrent.Executors;
 
 public class NavyWebServer {
 
+    protected final int givenPort;
     private final HttpServer myHttpServer;
     private final List<CallHandler> contexts = new ArrayList<>();
 
     public NavyWebServer(int port) throws IOException {
-        this.myHttpServer = HttpServer.create( new InetSocketAddress( port ), 0);
+        this.givenPort = port;
+        this.myHttpServer = HttpServer.create( new InetSocketAddress( this.givenPort ), 0);
         this.myHttpServer.setExecutor( Executors.newFixedThreadPool(1) );
         this.contexts.add(new PingHandler());
         this.contexts.add(new GameStartHandler());

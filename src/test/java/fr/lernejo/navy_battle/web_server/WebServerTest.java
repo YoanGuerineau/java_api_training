@@ -28,7 +28,7 @@ class WebServerTest {
     @AfterEach
     void close_web_servers() {
         myTestNavyWebServer.stop();
-        myTestHttpClient.stopServer();
+        myTestHttpClient.stop();
     }
 
     @AfterEach

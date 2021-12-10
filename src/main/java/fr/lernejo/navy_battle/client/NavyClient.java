@@ -10,19 +10,15 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
-public class NavyClient {
+public class NavyClient extends NavyWebServer {
 
-    private final NavyWebServer myClientWebServer;
     private final HttpClient myHttpClient;
     private final URL targetURL;
-    private final int givenPort;
 
     public NavyClient( int givenPort, String targetURL ) throws IOException {
-        this.givenPort = givenPort;
+        super(givenPort);
         URL foundURL = null;
         myHttpClient = HttpClient.newHttpClient();
-        myClientWebServer = new NavyWebServer(this.givenPort);
-
         try {
             foundURL = new URL(targetURL);
         } catch (MalformedURLException e) {
@@ -78,9 +74,9 @@ public class NavyClient {
     }
 
     public void play() throws MalformedURLException {
-        HttpResponse<String> myPingResponse = this.ping();
+        /*HttpResponse<String> myPingResponse = this.ping();
         System.out.println(myPingResponse.statusCode());
-        System.out.println(myPingResponse.body());
+        System.out.println(myPingResponse.body());*/
         HttpResponse<String> myGameStartResponse = this.gameStart();
         System.out.println(myGameStartResponse.statusCode());
         System.out.println(myGameStartResponse.body());
@@ -89,7 +85,4 @@ public class NavyClient {
         System.out.println(myGameFireResponse.body());
     }
 
-    public void stopServer() {
-        this.myClientWebServer.stop();
-    }
 }
