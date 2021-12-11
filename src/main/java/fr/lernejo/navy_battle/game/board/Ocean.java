@@ -1,23 +1,15 @@
 package fr.lernejo.navy_battle.game.board;
 
-import java.util.HashMap;
-import java.util.Map;
+import fr.lernejo.navy_battle.game.boats.Boat;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Ocean {
 
     private final Cell[][] board = new Cell[10][10];
-    private final HashMap<Character, Integer> columnMap = (HashMap<Character, Integer>) Map.ofEntries(
-        Map.entry( 'a', 0 ),
-        Map.entry( 'b', 1 ),
-        Map.entry( 'c', 2 ),
-        Map.entry( 'd', 3 ),
-        Map.entry( 'e', 4 ),
-        Map.entry( 'f', 5 ),
-        Map.entry( 'g', 6 ),
-        Map.entry( 'h', 7 ),
-        Map.entry( 'i', 8 ),
-        Map.entry( 'j', 9 )
-    );
+    private final Set<Boat> boats = new HashSet<>();
 
     public Ocean() {
         this(Cell.states.UNKNOWN.toString());
@@ -25,20 +17,47 @@ public class Ocean {
 
     public Ocean(String initialState) {
         for ( int row=0; row < 10; row++) {
-            for ( int col=0; col < 10; col++ ) {
-                board[row][col] = new Cell( this, initialState );
+            for ( int column=0; column < 10; column++ ) {
+                board[row][column] = new Cell( this, new Position( row, column ), initialState );
             }
         }
     }
 
-    public Cell getCell(String targetCell) {
-        int column = getColumn(targetCell.toUpperCase().toCharArray()[0]);
-        int row = Integer.parseInt(targetCell.substring(1,1));
-        return board[row][column];
+    public Cell getCellFromString( String targetCell ) {
+        int column = getColumnInt( targetCell.toCharArray()[0] );
+        int row = Integer.parseInt( targetCell.substring( 1, 1 ) );
+        return this.getCell( new Position( row, column ) );
     }
 
-    private int getColumn(char columnLetter) {
-        return this.columnMap.get(columnLetter);
+    public Cell getCell(Position targetCell) {
+        if ( ! cellExists(targetCell) ) {
+            return null;
+        }
+        return board[targetCell.getRow()][targetCell.getCol()];
+    }
+
+    public boolean cellExists(Position targetCell) {
+        return 0 <= targetCell.getRow() && targetCell.getRow() <= board.length && 0 <= targetCell.getCol() && targetCell.getCol() <= board[0].length;
+    }
+
+    public void hitBoat( Position targetCell ) {
+
+    }
+
+    public Boat getBoat( Position targetCell ) {
+        return null;
+    }
+
+    public int aliveBoats() {
+        return this.boats.stream().collect( Collectors.filtering(Boat::isAlive, Collectors.counting())).intValue();
+    }
+
+    private int getColumnInt(char columnChar) {
+        return ( (int)Character.toUpperCase( columnChar ) % (int)'A');
+    }
+
+    private char getColumnChar(int columnInt) {
+        return (char)(columnInt + (int)'A');
     }
 
 }
