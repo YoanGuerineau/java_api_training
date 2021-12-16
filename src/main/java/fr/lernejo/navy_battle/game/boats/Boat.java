@@ -1,13 +1,14 @@
 package fr.lernejo.navy_battle.game.boats;
 
 import fr.lernejo.navy_battle.game.board.Cell;
+import fr.lernejo.navy_battle.game.board.Position;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public abstract class Boat {
 
-    final Set<Cell> position = new HashSet<>();
+    private final HashSet<Cell> position = new HashSet<>();
 
     public boolean isAlive() {
         boolean isAlive = false;
@@ -18,6 +19,10 @@ public abstract class Boat {
             }
         }
         return isAlive;
+    }
+
+    public HashSet<Cell> getPosition() {
+        return this.position;
     }
 
 }

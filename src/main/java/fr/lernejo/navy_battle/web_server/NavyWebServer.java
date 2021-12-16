@@ -22,7 +22,7 @@ public class NavyWebServer {
         this.myHttpServer.setExecutor( Executors.newFixedThreadPool(1) );
         this.contexts.add(new PingHandler());
         this.contexts.add(new GameStartHandler());
-        this.contexts.add(new FireHandler());
+        this.contexts.add(new FireHandler());// Add this to constructor in order to unlock client when fire received
         this.setupContexts();
         this.myHttpServer.start();
     }

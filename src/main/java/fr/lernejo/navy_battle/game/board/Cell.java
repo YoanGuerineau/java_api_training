@@ -1,5 +1,6 @@
 package fr.lernejo.navy_battle.game.board;
 
+import fr.lernejo.navy_battle.game.boats.Boat;
 import fr.lernejo.navy_battle.transactions.JSONFire;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -66,14 +67,19 @@ public class Cell {
     }
 
     private JSONFire hitOccupied() {
-        this.container.hitBoat(this.getPosition());
-        if (this.container.getBoat(this.getPosition()).isAlive()) {
-            return new JSONFire(JSONFire.possibilities.HIT.toString(), true);
+        Boat targetBoat = this.container.findBoat(this.getPosition());
+        this.setCurrentState(states.HIT.toString());
+        if ( ! targetBoat.isAlive() ) {
+            for (Cell cell : targetBoat.getPosition()) {
+                cell.setCurrentState(states.SUNK.toString());
+            }
+            return new JSONFire(JSONFire.possibilities.SUNK.toString(), this.container.aliveBoats() > 0);
         }
-        return new JSONFire(JSONFire.possibilities.SUNK.toString(), this.container.aliveBoats() > 0);
+        return new JSONFire(JSONFire.possibilities.HIT.toString(), true);
     }
 
     private JSONFire hitEmpty() {
+        this.setCurrentState(states.MISS.toString());
         return new JSONFire( JSONFire.possibilities.MISS.toString(), true );
     }
 

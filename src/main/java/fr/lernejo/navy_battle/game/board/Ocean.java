@@ -1,18 +1,18 @@
 package fr.lernejo.navy_battle.game.board;
 
 import fr.lernejo.navy_battle.game.boats.Boat;
+import fr.lernejo.navy_battle.transactions.JSONFire;
 
 import java.util.HashSet;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Ocean {
 
     private final Cell[][] board = new Cell[10][10];
-    private final Set<Boat> boats = new HashSet<>();
+    private final HashSet<Boat> boats = new HashSet<>();
 
     public Ocean() {
-        this(Cell.states.UNKNOWN.toString());
+        this(Cell.states.EMPTY.toString());
     }
 
     public Ocean(String initialState) {
@@ -21,12 +21,6 @@ public class Ocean {
                 board[row][column] = new Cell( this, new Position( row, column ), initialState );
             }
         }
-    }
-
-    public Cell getCellFromString( String targetCell ) {
-        int column = getColumnInt( targetCell.toCharArray()[0] );
-        int row = Integer.parseInt( targetCell.substring( 1, 1 ) );
-        return this.getCell( new Position( row, column ) );
     }
 
     public Cell getCell(Position targetCell) {
@@ -40,24 +34,27 @@ public class Ocean {
         return 0 <= targetCell.getRow() && targetCell.getRow() <= board.length && 0 <= targetCell.getCol() && targetCell.getCol() <= board[0].length;
     }
 
-    public void hitBoat( Position targetCell ) {
-
+    public JSONFire hit(Position targetCell) {
+        return this.getCell(targetCell).hit();
     }
 
-    public Boat getBoat( Position targetCell ) {
-        return null;
+    public HashSet<Boat> getBoats() {
+        return this.boats;
+    }
+
+    public Boat findBoat(Position targetCell) {
+        Boat foundBoat = null;
+        for ( Boat boat : boats) {
+            if ( boat.getPosition().contains( this.getCell(targetCell) ) ) {
+                foundBoat = boat;
+                break;
+            }
+        }
+        return foundBoat;
     }
 
     public int aliveBoats() {
         return this.boats.stream().collect( Collectors.filtering(Boat::isAlive, Collectors.counting())).intValue();
-    }
-
-    private int getColumnInt(char columnChar) {
-        return ( (int)Character.toUpperCase( columnChar ) % (int)'A');
-    }
-
-    private char getColumnChar(int columnInt) {
-        return (char)(columnInt + (int)'A');
     }
 
 }

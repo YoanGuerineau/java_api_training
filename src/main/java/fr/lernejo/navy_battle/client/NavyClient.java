@@ -19,12 +19,12 @@ public class NavyClient extends NavyWebServer {
     public NavyClient( int givenPort, String targetURL ) throws IOException {
         super(givenPort);
         URL foundURL = null;
-        myHttpClient = HttpClient.newHttpClient();
         try {
             foundURL = new URL(targetURL);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
+        this.myHttpClient = HttpClient.newHttpClient();
         this.targetURL = foundURL;
     }
 

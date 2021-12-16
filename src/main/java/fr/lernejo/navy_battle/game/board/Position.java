@@ -5,6 +5,11 @@ public class Position {
     private int row;
     private int col;
 
+    public Position( String cellName ) {
+        this.row = Integer.parseInt( cellName.substring( 1, 1 ) );
+        this.col = getColumnInt( cellName.toCharArray()[0] );
+    }
+
     public Position( int row, int col ) {
         this.row = row;
         this.col = col;
@@ -24,6 +29,10 @@ public class Position {
 
     public void setCol(int col) {
         this.col = col;
+    }
+
+    private int getColumnInt(char columnChar) {
+        return ( (int)Character.toUpperCase( columnChar ) % (int)'A');
     }
 
     public Position up() {
