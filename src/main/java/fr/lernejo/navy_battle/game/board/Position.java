@@ -6,7 +6,7 @@ public class Position {
     private int col;
 
     public Position( String cellName ) {
-        this.row = Integer.parseInt( cellName.substring( 1, 1 ) );
+        this.row = Integer.parseInt( String.valueOf( cellName.charAt(1) ) );
         this.col = getColumnInt( cellName.toCharArray()[0] );
     }
 

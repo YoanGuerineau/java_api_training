@@ -83,7 +83,7 @@ public class NavyClient extends NavyWebServer {
             myGameFireResponse = this.fire("A1");
             System.out.println(myGameFireResponse.statusCode());
             System.out.println(myGameFireResponse.body());
-        } while ((boolean) new JSONFire(myGameFireResponse.body()).getJSON().get("shipLeft"));
+        } while ( new JSONFire(myGameFireResponse.body()).shipLeft() );
     }
 
 }

@@ -61,7 +61,7 @@ public class Cell {
             consequence = this.hitEmpty();
         } else {
             // Here we manage the cells that were already played ( they are either in miss, hit or sunk state )
-            consequence = new JSONFire( this.getCurrentState(), true );
+            consequence = new JSONFire( this.getCurrentState(), this.container.boatsLeft() );
         }
         return consequence;
     }
@@ -73,14 +73,14 @@ public class Cell {
             for (Cell cell : targetBoat.getPosition()) {
                 cell.setCurrentState(states.SUNK.toString());
             }
-            return new JSONFire(JSONFire.possibilities.SUNK.toString(), this.container.aliveBoats() > 0);
+            return new JSONFire(JSONFire.possibilities.SUNK.toString(), this.container.boatsLeft() );
         }
-        return new JSONFire(JSONFire.possibilities.HIT.toString(), true);
+        return new JSONFire(JSONFire.possibilities.HIT.toString(), this.container.boatsLeft() );
     }
 
     private JSONFire hitEmpty() {
         this.setCurrentState(states.MISS.toString());
-        return new JSONFire( JSONFire.possibilities.MISS.toString(), true );
+        return new JSONFire( JSONFire.possibilities.MISS.toString(), this.container.boatsLeft() );
     }
 
     public Cell up() {

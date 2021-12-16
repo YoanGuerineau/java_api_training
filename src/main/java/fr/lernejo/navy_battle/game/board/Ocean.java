@@ -53,8 +53,12 @@ public class Ocean {
         return foundBoat;
     }
 
-    public int aliveBoats() {
+    public int countAliveBoats() {
         return this.boats.stream().collect( Collectors.filtering(Boat::isAlive, Collectors.counting())).intValue();
+    }
+
+    public boolean boatsLeft() {
+        return this.countAliveBoats() > 0;
     }
 
 }

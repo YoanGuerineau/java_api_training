@@ -43,6 +43,13 @@ public class JSONFire implements JSONNavyObject {
         this.shipLeft = shipLeft;
     }
 
+    public String getConsequence() {
+        return this.consequence;
+    }
+
+    public boolean shipLeft() {
+        return this.shipLeft;
+    }
 
     @Override
     public JSONObject getJSON() {

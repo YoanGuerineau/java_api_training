@@ -1,6 +1,8 @@
 package fr.lernejo.navy_battle.web_server;
 
 import com.sun.net.httpserver.HttpServer;
+import fr.lernejo.navy_battle.game.board.Cell;
+import fr.lernejo.navy_battle.game.board.Ocean;
 import fr.lernejo.navy_battle.web_server.api.FireHandler;
 import fr.lernejo.navy_battle.web_server.api.GameStartHandler;
 
@@ -15,6 +17,7 @@ public class NavyWebServer {
     protected final int givenPort;
     private final HttpServer myHttpServer;
     private final List<CallHandler> contexts = new ArrayList<>();
+    private final Ocean myOcean = new Ocean();
 
     public NavyWebServer(int port) throws IOException {
         this.givenPort = port;
@@ -22,7 +25,7 @@ public class NavyWebServer {
         this.myHttpServer.setExecutor( Executors.newFixedThreadPool(1) );
         this.contexts.add(new PingHandler());
         this.contexts.add(new GameStartHandler());
-        this.contexts.add(new FireHandler());// Add this to constructor in order to unlock client when fire received
+        this.contexts.add(new FireHandler( this ));
         this.setupContexts();
         this.myHttpServer.start();
     }
@@ -39,6 +42,10 @@ public class NavyWebServer {
 
     public void stop() {
         this.myHttpServer.stop(0);
+    }
+
+    public Ocean getOcean() {
+        return this.myOcean;
     }
 
 }
