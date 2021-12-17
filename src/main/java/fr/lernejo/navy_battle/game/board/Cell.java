@@ -7,7 +7,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class Cell {
 
-    // Empty will be used to define enemy's board
     public enum states {
         EMPTY("empty"), OCCUPIED("occupied"), MISS("miss"), HIT("hit"), SUNK("sunk");
         private final String text;
@@ -41,7 +40,7 @@ public class Cell {
         return currentState.get();
     }
 
-    public void setCurrentState(String newState) {
+    private void setCurrentState(String newState) {
         this.currentState.set(newState);
     }
 
@@ -81,21 +80,5 @@ public class Cell {
     private JSONFire hitEmpty() {
         this.setCurrentState(states.MISS.toString());
         return new JSONFire( JSONFire.possibilities.MISS.toString(), this.container.boatsLeft() );
-    }
-
-    public Cell up() {
-        return this.container.getCell(this.getPosition().up());
-    }
-
-    public Cell right() {
-        return this.container.getCell(this.getPosition().right());
-    }
-
-    public Cell down() {
-        return this.container.getCell(this.getPosition().down());
-    }
-
-    public Cell left() {
-        return this.container.getCell(this.getPosition().left());
     }
 }

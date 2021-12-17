@@ -39,7 +39,7 @@ public class FireHandler implements CallHandler {
         if ( ! this.isMethodAllowed( exchange.getRequestMethod() ) ) {
             exchange.sendResponseHeaders(404, body.length());
         } else {
-            Position incomingFire = new Position(exchange.getRequestURI().getQuery().split("=")[1]);
+            Position incomingFire = new Position(exchange.getRequestURI().getQuery().split("=")[1]); // here we should only have cell=??
             JSONFire consequence = this.source.getOcean().hit(incomingFire);
             body = consequence.getJSONString();
             System.out.println(body);
