@@ -80,6 +80,7 @@ public class NavyClient extends NavyWebServer {
         System.out.println(myGameStartResponse.body());
         HttpResponse<String> myGameFireResponse;
         do {
+            
             myGameFireResponse = this.fire("A1");
             System.out.println(myGameFireResponse.statusCode());
             System.out.println(myGameFireResponse.body());

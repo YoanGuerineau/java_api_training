@@ -1,9 +1,7 @@
 package fr.lernejo.navy_battle.game.board;
-
 import fr.lernejo.navy_battle.game.boats.Boat;
 import fr.lernejo.navy_battle.transactions.JSONFire;
-
-import java.util.HashSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Ocean {
@@ -38,19 +36,21 @@ public class Ocean {
         return this.getCell(targetCell).hit();
     }
 
+    public Cell[][] getBoard() {
+        return this.board;
+    }
+
     public HashSet<Boat> getBoats() {
         return this.boats;
     }
 
     public Boat findBoat(Position targetCell) {
-        Boat foundBoat = null;
         for ( Boat boat : boats) {
             if ( boat.getPosition().contains( this.getCell(targetCell) ) ) {
-                foundBoat = boat;
-                break;
+                return boat;
             }
         }
-        return foundBoat;
+        return null;
     }
 
     public int countAliveBoats() {
@@ -59,6 +59,28 @@ public class Ocean {
 
     public boolean boatsLeft() {
         return this.countAliveBoats() > 0;
+    }
+
+    public void setupBoatsRandomly( HashSet<Boat> boats ) {
+        this.boats.clear();
+        this.boats.addAll(boats);
+        for (Boat boat : boats) {
+            do {
+                Cell randomCell = this.getRandomCell();
+                List<String> directions = new ArrayList<>(List.of("up", "right", "down", "left"));
+                while ( directions.size() > 0 && !boat.isAlive() ) {
+                    String direction = directions.remove(new Random().nextInt(directions.size()));
+                    boat.setup( randomCell, direction );
+                    System.out.println(boat.isAlive());
+                }
+            } while ( !boat.isAlive() );
+        }
+    }
+
+    public Cell getRandomCell() {
+        int randomRow = new Random().nextInt(this.board.length);
+        int randomCol = new Random().nextInt(this.board[0].length);
+        return this.board[randomRow][randomCol];
     }
 
 }

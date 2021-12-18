@@ -1,14 +1,15 @@
 package fr.lernejo.navy_battle.web_server;
 
 import com.sun.net.httpserver.HttpServer;
-import fr.lernejo.navy_battle.game.board.Cell;
 import fr.lernejo.navy_battle.game.board.Ocean;
+import fr.lernejo.navy_battle.game.boats.*;
 import fr.lernejo.navy_battle.web_server.api.FireHandler;
 import fr.lernejo.navy_battle.web_server.api.GameStartHandler;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.Executors;
 
@@ -28,6 +29,7 @@ public class NavyWebServer {
         this.contexts.add(new FireHandler( this ));
         this.setupContexts();
         this.myHttpServer.start();
+        this.setupBoats();
     }
 
     public void createContext(String path, CallHandler handler) {
@@ -46,6 +48,16 @@ public class NavyWebServer {
 
     public Ocean getOcean() {
         return this.myOcean;
+    }
+
+    public void setupBoats() {
+        HashSet<Boat> boats = new HashSet<>();
+        boats.add(new Carrier( this.myOcean ));
+        boats.add(new Cruiser( this.myOcean ));
+        boats.add(new AntiTorpedo( this.myOcean ));
+        boats.add(new AntiTorpedo( this.myOcean ));
+        boats.add(new Torpedo( this.myOcean ));
+        this.myOcean.setupBoatsRandomly(boats);
     }
 
 }

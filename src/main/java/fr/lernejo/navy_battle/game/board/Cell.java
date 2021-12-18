@@ -1,8 +1,6 @@
 package fr.lernejo.navy_battle.game.board;
-
 import fr.lernejo.navy_battle.game.boats.Boat;
 import fr.lernejo.navy_battle.transactions.JSONFire;
-
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Cell {
@@ -40,7 +38,7 @@ public class Cell {
         return currentState.get();
     }
 
-    private void setCurrentState(String newState) {
+    public void setCurrentState(String newState) {
         this.currentState.set(newState);
     }
 
@@ -59,8 +57,7 @@ public class Cell {
         } else if ( this.isEmpty() ) {
             consequence = this.hitEmpty();
         } else {
-            // Here we manage the cells that were already played ( they are either in miss, hit or sunk state )
-            consequence = new JSONFire( this.getCurrentState(), this.container.boatsLeft() );
+            consequence = new JSONFire( this.getCurrentState(), this.container.boatsLeft() ); // here we manage the cells that were already played ( they are either in miss, hit or sunk state )
         }
         return consequence;
     }
